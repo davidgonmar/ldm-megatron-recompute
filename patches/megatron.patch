@@ -1,0 +1,481 @@
+diff --git a/megatron/core/models/hybrid/hybrid_block.py b/megatron/core/models/hybrid/hybrid_block.py
+index f9aa199ca..d0f1d4c50 100644
+--- a/megatron/core/models/hybrid/hybrid_block.py
++++ b/megatron/core/models/hybrid/hybrid_block.py
+@@ -728,7 +728,8 @@ class HybridStack(MegatronModule):
+                 scheme = getattr(layer, "residual_scheme", None)
+                 candidates = (scheme.mhc_mixer if scheme is not None else None,)
+             own = [m for m in candidates if isinstance(m, DepthMemoryMixer)]
+-            if len(own) > 1 and getattr(self.config, "depth_memory_unwind", False):
++            if (len(own) > 1 and getattr(self.config, "depth_memory_unwind", False)
++                    and self.config.depth_memory_impl == "torch"):
+                 # a recomputed layer reads the state at its edge: one edge per recompute chunk
+                 raise ValueError("depth_memory_unwind: a layer with more than one LDM site")
+             mixers += own
+@@ -742,10 +743,36 @@ class HybridStack(MegatronModule):
+             self._wire_depth_memory_segments(mixers, make_workspace)
+             return
+         self.ldm_workspace = make_workspace(self.config, total_edges=len(mixers) + 1)
++        self.ldm_records = hasattr(self.ldm_workspace, "layout")
++        if self.ldm_records:
++            # depth_memory_unwind with cute: the stream carries each recompute group's records,
++            # so the workspace needs the groups' edges (edge 0, the embedding write, alone)
++            self._ldm_layer_edges, edge = [], 1
++            for layer in self.layers:
++                count = len(self._layer_ldm_mixers(layer))
++                self._ldm_layer_edges.append((edge, count))
++                edge += count
++            groups = [(0, 1)] + [self.ldm_segment(a, b) for a, b in self._ldm_chunks()]
++            self.ldm_workspace.layout(groups, self.config.hidden_size)
+         self.ldm_stream_boundary.wire(self.ldm_workspace)
+         for edge, mixer in enumerate(mixers, start=1):
+             mixer.wire(edge, self.ldm_workspace)
+ 
++    @staticmethod
++    def _layer_ldm_mixers(layer):
++        from megatron.core.transformer.depth_memory import DepthMemoryMixer
++
++        if isinstance(layer, TransformerLayer):
++            candidates = (
++                getattr(layer, "mhc_block_mixer", None),
++                layer.mhc_attn_mixer,
++                layer.mhc_mlp_mixer,
++            )
++        else:
++            scheme = getattr(layer, "residual_scheme", None)
++            candidates = (scheme.mhc_mixer if scheme is not None else None,)
++        return [m for m in candidates if isinstance(m, DepthMemoryMixer)]
++
+     def _wire_depth_memory_segments(self, mixers, make_workspace) -> None:
+         """depth_memory_segments: the steps numbered per stage (edge 0 the embedding on the first
+         stage, then the sublayers), every layer's first / last edge recorded, and ONE workspace
+diff --git a/megatron/core/recompute.py b/megatron/core/recompute.py
+index 464a33f92..7de3d3203 100644
+--- a/megatron/core/recompute.py
++++ b/megatron/core/recompute.py
+@@ -222,6 +222,10 @@ def checkpointed_forward(
+         skip = _skip_chunks()
+         if skip and getattr(self, "ldm_segmented", False):
+             raise NotImplementedError("RECOMPUTE_SKIP_CHUNKS with depth_memory_segments")
++        if skip and getattr(self, "ldm_records", False):
++            # a chunk run without its checkpoint is never recomputed, so the records its input
++            # carries never reach the workspace
++            raise NotImplementedError("RECOMPUTE_SKIP_CHUNKS with depth_memory_unwind (cute)")
+         bounds = []
+         layer_idx = 0
+         while layer_idx < len(order):
+diff --git a/megatron/core/transformer/depth_memory.py b/megatron/core/transformer/depth_memory.py
+index 45c331aed..c52006995 100644
+--- a/megatron/core/transformer/depth_memory.py
++++ b/megatron/core/transformer/depth_memory.py
+@@ -263,12 +263,22 @@ class DepthMemoryMixer(nn.Module):
+ 
+     def wire(self, edge: int, workspace) -> None:
+         self.edge, self._workspace = edge, [workspace]
++        # depth_memory_unwind with cute: the workspace serves the reads, the stream carries x and
++        # the per-edge records (cute_ldm.workspace.CuteRecomputeWorkspace)
++        self._x_only = hasattr(workspace, "read")
+ 
+     # -- mHC mixer API (TransformerLayer._mhc_read / _mhc_write, ResidualSchemeAdapter) --------
+     def forward(self, streams: torch.Tensor):
+         return None, None, None
+ 
+     def read(self, streams: torch.Tensor, h_pre=None) -> torch.Tensor:
++        if self._x_only:
++            from megatron.core.transformer.depth_memory_state import stream_x
++
++            self._workspace[0].ingest(self.edge, streams)
++            x = stream_x(streams)
++            self._read_x = (streams, x)   # the write's residual: one gradient path into streams
++            return x + _read_from_workspace(self._workspace[0], self.edge - 1, x)
+         return streams[..., 0, :] + streams[..., 1, :]
+ 
+     def write(self, streams, sublayer_out, h_post=None, h_res=None, lerp=None) -> torch.Tensor:
+@@ -276,6 +286,16 @@ class DepthMemoryMixer(nn.Module):
+             raise NotImplementedError("depth_memory with the nGPT LERP residual")
+         if self.edge is None:
+             raise RuntimeError("depth_memory: the mixer was not wired by its HybridStack")
++        if self._x_only:
++            from megatron.core.transformer.depth_memory_state import stream_write, stream_x
++
++            read_x, self._read_x = getattr(self, "_read_x", None), None
++            x = read_x[1] if read_x is not None and read_x[0] is streams else stream_x(streams)
++            stream = ldm_step_x(
++                self.write_site, self.next_query, self._workspace[0], self.edge, x + sublayer_out,
++                sublayer_out,
++            )
++            return stream_write(self._workspace[0], self.edge, stream, streams)
+         stream = streams[..., 0, :] + sublayer_out
+         read = ldm_fused_step(
+             self.write_site, self.next_query, self._workspace[0], self.edge, stream, sublayer_out
+@@ -336,12 +356,11 @@ def _site_addresses_eager(*args):
+ _site_addresses_compiled = None
+ 
+ 
+-def ldm_fused_step(write, next_read, workspace, edge, stream, value) -> torch.Tensor:
+-    """Write ``value`` under the key of ``stream``, then read with ``next_read``'s query of
+-    ``stream``; returns the read as ``[..., h]`` in the stream's dtype."""
++def _step_inputs(write, next_read, workspace, stream, value):
++    """The step's inputs from the stream: key, query, value, scale and forgetting in the
++    workspace's layouts (the address networks compiled, see _site_addresses)."""
+     global _site_addresses_compiled
+     from megatron.core.transformer.attn_res import _maybe_compile
+-    from megatron.core.transformer.depth_memory_state import depth_memory_step
+ 
+     if _site_addresses_compiled is None:
+         _site_addresses_compiled = _maybe_compile(_site_addresses_eager)
+@@ -357,16 +376,31 @@ def ldm_fused_step(write, next_read, workspace, edge, stream, value) -> torch.Te
+         qn.gate.weight, qn.gate.bias, next_read.read_gain,
+     )
+     g = key.shape[-2]
+-    read = depth_memory_step(
+-        workspace,
+-        edge,
+-        key.reshape(n, g, -1),
+-        query.reshape(n, g, -1),
+-        value.reshape(n, g, shape[-1] // g),
+-        scale.reshape(n, g),
+-        lam,
+-    )
+-    return read.reshape(shape).to(stream.dtype)
++    return (key.reshape(n, g, -1), query.reshape(n, g, -1), value.reshape(n, g, shape[-1] // g),
++            scale.reshape(n, g), lam)
++
++
++def ldm_fused_step(write, next_read, workspace, edge, stream, value) -> torch.Tensor:
++    """Write ``value`` under the key of ``stream``, then read with ``next_read``'s query of
++    ``stream``; returns the read as ``[..., h]`` in the stream's dtype."""
++    from megatron.core.transformer.depth_memory_state import depth_memory_step
++
++    read = depth_memory_step(workspace, edge, *_step_inputs(write, next_read, workspace, stream, value))
++    return read.reshape(stream.shape).to(stream.dtype)
++
++
++def ldm_step_x(write, next_read, workspace, edge, stream, value) -> torch.Tensor:
++    """The same write, as a pass-through on ``stream`` (depth_memory_unwind with cute); the read
++    is taken later with :func:`_read_from_workspace`."""
++    from megatron.core.transformer.depth_memory_state import depth_memory_step_x
++
++    return depth_memory_step_x(workspace, edge, stream, *_step_inputs(write, next_read, workspace, stream, value))
++
++
++def _read_from_workspace(workspace, edge, x) -> torch.Tensor:
++    from megatron.core.transformer.depth_memory_state import read_from_workspace
++
++    return read_from_workspace(workspace, edge, x)
+ 
+ 
+ class DepthMemoryStreamBoundary(nn.Module):
+@@ -383,6 +417,7 @@ class DepthMemoryStreamBoundary(nn.Module):
+ 
+     def wire(self, workspace) -> None:
+         self._workspace = [workspace]
++        self._x_only = hasattr(workspace, "read")
+ 
+     def expand(self, embedding: torch.Tensor) -> torch.Tensor:
+         # through __call__: the fused step reads the address weights directly, so Megatron-FSDP
+@@ -390,10 +425,22 @@ class DepthMemoryStreamBoundary(nn.Module):
+         return self(embedding)
+ 
+     def forward(self, embedding: torch.Tensor) -> torch.Tensor:
++        if self._x_only:
++            from megatron.core.transformer.depth_memory_state import stream_write
++
++            x = ldm_step_x(self.embed_write, self.first_query, self._workspace[0], 0, embedding, embedding)
++            return stream_write(self._workspace[0], 0, x, None)
+         read = ldm_fused_step(
+             self.embed_write, self.first_query, self._workspace[0], 0, embedding, embedding
+         )
+         return torch.stack((embedding, read), dim=-2)
+ 
+     def collapse(self, streams: torch.Tensor) -> torch.Tensor:
++        if self._x_only:
++            from megatron.core.transformer.depth_memory_state import stream_x
++
++            ws = self._workspace[0]
++            ws.ingest(ws.total_edges, streams)   # the last group's records, for the backward
++            x = stream_x(streams)
++            return x + _read_from_workspace(ws, ws.total_edges - 1, x)
+         return streams[..., 0, :] + streams[..., 1, :]
+diff --git a/megatron/core/transformer/depth_memory_state.py b/megatron/core/transformer/depth_memory_state.py
+index 82b402dba..9800aa10c 100644
+--- a/megatron/core/transformer/depth_memory_state.py
++++ b/megatron/core/transformer/depth_memory_state.py
+@@ -416,14 +416,103 @@ def depth_memory_step(workspace, edge, khat, query, value, scale, forgetting) ->
+     return DepthMemoryStep.apply(workspace, edge, khat, query, value, scale, forgetting)
+ 
+ 
++class DepthMemoryStepX(torch.autograd.Function):
++    """``depth_memory_unwind`` with the CuTe kernels: the write step of ``edge`` as a
++    pass-through node on the stream x. The read is taken by :class:`ReadFromWorkspace`,
++    whose backward runs the step's backward and leaves the step's input gradients in the
++    workspace; this node's backward hands them to the address networks."""
++
++    @staticmethod
++    def forward(ctx, workspace, edge: int, x, khat, query, value, scale, forgetting):
++        ctx.workspace, ctx.edge, ctx.value_dtype = workspace, edge, value.dtype
++        workspace.forward(edge, khat, query, value, scale, forgetting)
++        return x.view_as(x)
++
++    @staticmethod
++    def backward(ctx, grad_x):
++        dkhat, dq, dvalue, dscale, dforget = ctx.workspace.grad_stash.pop(ctx.edge)
++        return None, None, grad_x, dkhat, dq, dvalue.to(ctx.value_dtype), dscale, dforget
++
++
++class ReadFromWorkspace(torch.autograd.Function):
++    """The read of ``edge`` from the workspace (the step's own read in the forward, the read
++    kernel's under recompute). ``x`` is the step's output stream: it orders this node after the
++    step, so the read's backward (the step's backward) runs before the step node's."""
++
++    @staticmethod
++    def forward(ctx, workspace, edge: int, x):
++        ctx.workspace, ctx.edge = workspace, edge
++        return workspace.read(edge).reshape(x.shape).to(x.dtype)
++
++    @staticmethod
++    def backward(ctx, read_grad):
++        ctx.workspace.grad_stash[ctx.edge] = ctx.workspace.backward(ctx.edge, read_grad)
++        return None, None, None
++
++
++class StreamX(torch.autograd.Function):
++    """x out of the record stream [slots, ..., h] (depth_memory_unwind with the CuTe kernels; slot
++    first, so x and the records are contiguous blocks).
++    Only x carries a gradient: the backward hands x's gradient to every slot as a broadcast,
++    nothing allocated; the record slots' gradient is never read (StreamWrite takes the records
++    as data)."""
++
++    @staticmethod
++    def forward(ctx, streams):
++        ctx.shape = streams.shape
++        return streams[0]
++
++    @staticmethod
++    def backward(ctx, grad):
++        return grad.unsqueeze(0).expand(ctx.shape)
++
++
++class StreamWrite(torch.autograd.Function):
++    """The record stream after the step of ``edge``: x, then the incoming records with the
++    edge's own written in by the workspace (in the forward; under recompute they pass through).
++    ``streams`` None: the embedding write, the stream starts here."""
++
++    @staticmethod
++    def forward(ctx, workspace, edge: int, x, streams):
++        out = x.new_empty((workspace.stream_slots(x.dtype), *x.shape))
++        records = out[1:]
++        if streams is None:
++            records.zero_()
++        else:
++            records.copy_(streams[1:])
++        workspace.put_record(edge, records)
++        out[0].copy_(x)
++        return out
++
++    @staticmethod
++    def backward(ctx, grad):
++        return None, None, grad[0], None
++
++
++def stream_x(streams) -> torch.Tensor:
++    return StreamX.apply(streams)
++
++
++def stream_write(workspace, edge, x, streams) -> torch.Tensor:
++    return StreamWrite.apply(workspace, edge, x, None if streams is None else streams.detach())
++
++
++def depth_memory_step_x(workspace, edge, x, khat, query, value, scale, forgetting) -> torch.Tensor:
++    return DepthMemoryStepX.apply(workspace, edge, x, khat, query, value, scale, forgetting)
++
++
++def read_from_workspace(workspace, edge, x) -> torch.Tensor:
++    return ReadFromWorkspace.apply(workspace, edge, x)
++
++
+ def make_workspace(config, total_edges: int):
+     """The state backend of ``config.depth_memory_impl`` ("torch" or "cute")."""
+     groups, key_dim = config.depth_memory_groups, config.depth_memory_key_dim
+     value_dim = config.hidden_size // groups
+     if config.depth_memory_impl == "cute":
+-        from cute_ldm.workspace import CuteDepthMemoryWorkspace
++        from cute_ldm.workspace import CuteDepthMemoryWorkspace, CuteRecomputeWorkspace
+ 
+-        return CuteDepthMemoryWorkspace(
++        settings = dict(
+             total_edges=total_edges,
+             groups=groups,
+             key_dim=key_dim,
+@@ -432,6 +521,12 @@ def make_workspace(config, total_edges: int):
+             span=config.depth_memory_window,
+             running_covariance_dtype=config.depth_memory_covariance_dtype,
+         )
++        if getattr(config, "depth_memory_unwind", False):
++            # full recompute: the per-edge tapes travel in the stream as records, the recomputed
++            # layers read from the running state, nothing of the state is checkpointed; the
++            # HybridStack sets the recompute groups (CuteRecomputeWorkspace.layout)
++            return CuteRecomputeWorkspace(**settings)
++        return CuteDepthMemoryWorkspace(**settings)
+     if getattr(config, "depth_memory_unwind", False):
+         return UnwindingDepthMemoryWorkspace(total_edges, groups, key_dim, value_dim,
+                                              config.depth_memory_alpha)
+diff --git a/megatron/core/transformer/transformer_config.py b/megatron/core/transformer/transformer_config.py
+index ba5b55439..c3b0f02c2 100644
+--- a/megatron/core/transformer/transformer_config.py
++++ b/megatron/core/transformer/transformer_config.py
+@@ -2111,12 +2111,20 @@ class TransformerConfig(ModelParallelConfig):
+     stage holds one segment's tapes)."""
+ 
+     depth_memory_unwind: bool = False
+-    """LDM "torch" with full activation recompute, one layer per chunk, no pipeline parallelism:
+-    nothing of the state is checkpointed. The forward updates (M, P) in place without a tape; a
+-    layer's recompute (in the backward, the state then at that layer's edge) reads from the current
+-    state and recovers the edge's update in closed form (kappa = P_e kbar, u = (vbar - M_e' kbar) /
+-    (1 - kappa . kbar)); the backward unwinds M, P to the previous edge. The checkpoints carry
+-    only the [x, r] streams (depth_memory_state.UnwindingDepthMemoryWorkspace)."""
++    """LDM with full activation recompute and no pipeline parallelism: nothing of the state is
++    checkpointed; the checkpoints carry only the [x, r] streams.
++    "torch" (one layer per chunk): the forward updates (M, P) in place without a tape; a layer's
++    recompute (in the backward, the state then at that layer's edge) reads from the current state
++    and recovers the edge's update in closed form (kappa = P_e kbar, u = (vbar - M_e' kbar) /
++    (1 - kappa . kbar)); the backward unwinds M, P to the previous edge
++    (depth_memory_state.UnwindingDepthMemoryWorkspace). This inverse amplifies the rounding of
++    the state across depth; the paper's kernels do not use it.
++    "cute" (any chunk size): the paper's kernels, unchanged. Their per-edge tapes travel in the
++    residual stream as records, one per edge of a recompute group, so Megatron checkpoints and
++    offloads them with the stream as it does mHC's streams; a recomputed layer takes its read
++    from the running state at its window's boundary (the read kernel), and the backward unwinds
++    M by subtraction and P by addition from the FP32 running covariance
++    (cute_ldm.workspace.CuteRecomputeWorkspace)."""
+ 
+     depth_memory_window: int = 4
+     """LDM "cute": the window E of deferred writes (the paper: 4)."""
+@@ -2224,17 +2232,22 @@ class TransformerConfig(ModelParallelConfig):
+                     "capturable); use depth_memory_impl torch or cute"
+                 )
+             if self.depth_memory_unwind:
+-                if self.depth_memory_impl != "torch" or self.depth_memory_segments:
+-                    raise ValueError("depth_memory_unwind needs depth_memory_impl torch, no segments")
+-                if not (
+-                    self.recompute_granularity == "full"
+-                    and self.recompute_method == "uniform"
+-                    and self.recompute_num_layers == 1
+-                ):
++                if self.depth_memory_impl not in ("torch", "cute") or self.depth_memory_segments:
++                    raise ValueError(
++                        "depth_memory_unwind needs depth_memory_impl torch or cute, no segments"
++                    )
++                if not (self.recompute_granularity == "full" and self.recompute_method == "uniform"):
++                    raise ValueError("depth_memory_unwind needs full, uniform recompute")
++                if self.depth_memory_impl == "torch" and self.recompute_num_layers != 1:
+                     raise ValueError(
+-                        "depth_memory_unwind needs full recompute, uniform, one layer per chunk "
+-                        "(a layer is one edge: its recompute reads the state at that edge)"
++                        "depth_memory_unwind with torch needs one layer per chunk (a layer is one "
++                        "edge: its recompute reads the state at that edge)"
+                     )
++                if self.depth_memory_impl == "cute" and self.depth_memory_covariance_dtype != "float32":
++                    raise ValueError("depth_memory_unwind with cute needs a float32 covariance")
++                if self.depth_memory_impl == "cute" and self.depth_memory_sites != "all":
++                    # a pass-through sublayer carries [x, r], not the record stream
++                    raise ValueError("depth_memory_unwind with cute needs depth_memory_sites all")
+                 if self.pipeline_model_parallel_size > 1:
+                     raise ValueError("depth_memory_unwind without pipeline parallelism")
+             elif self.recompute_granularity == "full" and not self.depth_memory_segments:
+diff --git a/tests/unit_tests/models/test_hybrid_depth_memory_segments.py b/tests/unit_tests/models/test_hybrid_depth_memory_segments.py
+index a1b3d4fe5..2819f86f1 100644
+--- a/tests/unit_tests/models/test_hybrid_depth_memory_segments.py
++++ b/tests/unit_tests/models/test_hybrid_depth_memory_segments.py
+@@ -99,3 +99,37 @@ def test_unwind_matches_one_sequence(pattern, fused, monkeypatch):
+                 torch.testing.assert_close(grads[k], ref_grads[k], **grad_tol, msg=k)
+     finally:
+         Utils.destroy_model_parallel()
++
++
++@pytest.mark.parametrize("chunk", [1, 2, 3, 4])   # 1: windows of 2 edges; 3: odd groups; 4: windows inside a group
++@pytest.mark.parametrize("pattern", ["*-*-*-*-", "*E*E-*"])
++def test_cute_recompute_matches_one_sequence(pattern, chunk):
++    """depth_memory_unwind with the CuTe kernels: full recompute with ``chunk`` layers per chunk,
++    the tapes carried in the stream as records, each recomputed layer's read from the running
++    state; two micro-batches in a row. Within the CuTe tolerance of the torch oracle
++    and of the CuTe one-sequence form without recompute."""
++    pytest.importorskip("cute_ldm.workspace")
++    if torch.cuda.get_device_capability()[0] < 9:
++        pytest.skip("cute_ldm needs Hopper / Blackwell")
++    Utils.initialize_model_parallel(1, 1)
++    try:
++        kw = dict(num_moe_experts=4, moe_router_topk=2, moe_ffn_hidden_size=64) if "E" in pattern else {}
++        ids = [torch.randint(0, VOCAB, (B, S), device="cuda") for _ in range(2)]
++        oracle = _model(pattern, "torch", **kw)
++        ref = _model(pattern, "cute", **kw)
++        model = _model(pattern, "cute", depth_memory_unwind=True,
++                       recompute_granularity="full", recompute_method="uniform",
++                       recompute_num_layers=chunk, **kw)
++        tol = dict(rtol=3e-2, atol=3e-3)
++        for batch in ids:
++            oracle_out, oracle_grads = _fwd_bwd(oracle, batch)
++            ref_out, ref_grads = _fwd_bwd(ref, batch)
++            out, grads = _fwd_bwd(model, batch)
++            assert set(grads) == set(ref_grads) == set(oracle_grads)
++            torch.testing.assert_close(out, ref_out, **tol)
++            torch.testing.assert_close(out, oracle_out, **tol)
++            for k in ref_grads:
++                torch.testing.assert_close(grads[k], ref_grads[k], **tol, msg=k)
++                torch.testing.assert_close(grads[k], oracle_grads[k], **tol, msg=k)
++    finally:
++        Utils.destroy_model_parallel()
+diff --git a/tests/unit_tests/transformer/test_depth_memory_cute.py b/tests/unit_tests/transformer/test_depth_memory_cute.py
+index 46b863d7e..4dcc64995 100644
+--- a/tests/unit_tests/transformer/test_depth_memory_cute.py
++++ b/tests/unit_tests/transformer/test_depth_memory_cute.py
+@@ -30,7 +30,7 @@ def _inputs(edges, n, g, k, d, seed):
+ 
+ 
+ @pytest.mark.parametrize("edges,d", [(1, 64), (5, 64), (11, 128), (9, 48)])
+-@pytest.mark.parametrize("cov", ["float32", "bfloat16"])
++@pytest.mark.parametrize("cov", ["float32"])  # the backward unwinds P from the running FP32 state
+ def test_kernels_match_the_torch_oracle(edges, d, cov):
+     n, g, k = 512, 16, 8
+     torch_ws = TorchDepthMemoryWorkspace(edges, g, k, d, alpha=1.0)
+@@ -54,3 +54,40 @@ def test_kernels_match_the_torch_oracle(edges, d, cov):
+                 scale = a.float().abs().max().clamp_min(1e-6)
+                 err = (b.float() - a.float()).abs().max() / scale
+                 assert err < 5e-2, (edges - 1 - e, name, float(err))
++
++
++@pytest.mark.parametrize("d", [64, 128])
++def test_recompute_reads_match_the_torch_oracle(d):
++    """The read kernel: a window's reads from the running state at the window's end (before its
++    window-end launch) and at its start (after it), against the oracle's reads of the forward."""
++    edges, n, g, k = 9, 512, 16, 8
++    torch_ws = TorchDepthMemoryWorkspace(edges, g, k, d, alpha=1.0)
++    cute_ws = cute_ldm.CuteDepthMemoryWorkspace(total_edges=edges, groups=g, key_dim=k,
++                                                value_dim=d, span=4, running_covariance_dtype="float32")
++    torch_ws.ensure(n, "cuda")
++    cute_ws.ensure(n, "cuda")
++    steps = _inputs(edges, n, g, k, d, seed=11 * d)
++    grads = [torch.randn(n, g, d, device="cuda").to(torch.bfloat16) for _ in range(edges)]
++    reads_t = [torch_ws.forward(e, *steps[e]) for e in range(edges)]
++    for e in range(edges):
++        cute_ws.forward(e, *steps[e])
++
++    def check(got, first, tag):
++        for j, read in enumerate(got):
++            ref = reads_t[first + j]
++            err = (read.float() - ref).abs().max() / ref.abs().max()
++            assert err < 3e-2, (tag, first + j, float(err))
++
++    # the state is after edge 8 = after the last edge of the window [8, 9): its own read, from the end
++    check(cute_ws.recompute_reads(8, 9, 0, 1, from_end=True), 8, "end, last window")
++    torch_ws.backward(8, grads[8])
++    cute_ws.backward(8, grads[8])
++    # now before edge 8 = after edge 7, the end of the window [4, 8): its reads from the end
++    check(cute_ws.recompute_reads(4, 8, 0, 4, from_end=True), 4, "end")
++    check(cute_ws.recompute_reads(4, 8, 1, 3, from_end=True), 5, "end, slice")
++    for e in (7, 6, 5, 4):
++        torch_ws.backward(e, grads[e])
++        cute_ws.backward(e, grads[e])
++    # now before edge 4 = the start of the window [4, 8): the same reads from the start
++    check(cute_ws.recompute_reads(4, 8, 0, 4, from_end=False), 4, "start")
++    check(cute_ws.recompute_reads(4, 8, 2, 4, from_end=False), 6, "start, slice")
