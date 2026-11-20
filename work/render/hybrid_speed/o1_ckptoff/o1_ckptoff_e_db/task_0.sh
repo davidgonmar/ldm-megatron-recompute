@@ -1,0 +1,112 @@
+#!/bin/bash
+torchrun \
+  --nproc-per-node 4\
+  --nnodes 8\
+  --max-restarts 0\
+  --tee 3\
+  --rdzv-endpoint "$MASTER_ADDR:$MASTER_PORT"\
+  --rdzv-backend c10d\
+  --node-rank "$SLURM_NODEID"\
+  --master-addr "$MASTER_ADDR"\
+  --master-port "$MASTER_PORT"\
+  --numa-binding node\
+   ./submodules/Megatron-LM/pretrain_hybrid.py \
+   --adam-beta2 0.95\
+   --disable-bias-linear\
+   --attention-dropout 0.0\
+   --attention-output-gate\
+   --bf16\
+   --no-check-for-nan-in-loss-and-grad\
+   --ckpt-format fsdp_dtensor\
+   --no-create-attention-mask-in-dataloader\
+   --cross-entropy-loss-fusion\
+   --data-cache-path /fast/dmartinez/oellm-ldm-work/render/hybrid_speed/o1_ckptoff/e_db/data_cache\
+   --data-path /gpfs/projects/ehpc533/preprocessed/openeurollm-tokenized-256k/nemotron-cc/nemotron-mha-10p-sample\
+   --dataloader-inter-document-masking\
+   --dataloader-prefetch-factor 8\
+   --dataloader-type cyclic\
+   --engram-ngram-orders 2 3\
+   --eval-interval 1000000\
+   --eval-iters 0\
+   --exclusive-self-attention\
+   --experimental-attention-variant complex_kda\
+   --expert-model-parallel-size 4\
+   --ffn-hidden-size 6144\
+   --fsdp-double-buffer\
+   --fused-qk-norm-rope\
+   --fused-residual-rmsnorm\
+   --fused-short-conv\
+   --gdn-fused-out-norm\
+   --global-batch-size 512\
+   --hidden-dropout 0.0\
+   --hidden-size 2048\
+   --hybrid-layer-pattern "LELELELELELELE*ELELELELELELELE*ELELELELELELELE*ELELELELELELELE*ELELELELELELELE*ELELELELELELELE*E"\
+   --is-hybrid-model\
+   --kv-channels 128\
+   --liger-fused-linear-cross-entropy\
+   --liger-fused-linear-cross-entropy-chunk-size 2048\
+   --linear-beta-max 2.0\
+   --linear-drop-qkv-silu\
+   --linear-num-value-heads 16\
+   --log-interval 1\
+   --log-throughput\
+   --log-timers-to-tensorboard\
+   --lr 0.001\
+   --lr-decay-style constant\
+   --lr-warmup-iters 5\
+   --manual-gc\
+   --manual-gc-interval 10\
+   --max-position-embeddings 16384\
+   --megatron-fsdp-grad-comm-dtype fp32\
+   --megatron-fsdp-main-grads-dtype fp32\
+   --mhc\
+   --micro-batch-size 4\
+   --min-lr 0.0001\
+   --no-mmap-bin-files\
+   --moe-aux-loss-coeff 0.0001\
+   --moe-ffn-hidden-size 768\
+   --moe-flex-dispatcher-backend moonep\
+   --moe-flex-dispatcher-num-sms 64\
+   --moe-grouped-gemm\
+   --moe-permute-fusion\
+   --moe-router-dtype fp32\
+   --moe-router-enable-expert-bias\
+   --moe-router-fusion\
+   --moe-router-load-balancing-type aux_loss\
+   --moe-router-score-function sigmoid\
+   --moe-router-topk 5\
+   --moe-shared-expert-intermediate-size 768\
+   --moe-token-dispatcher-type flex\
+   --normalization RMSNorm\
+   --num-attention-heads 16\
+   --num-experts 112\
+   --num-query-groups 2\
+   --num-workers 8\
+   --overlap-grad-reduce\
+   --no-overlap-p2p-communication\
+   --overlap-param-gather\
+   --padded-vocab-size 262144\
+   --position-embedding-type none\
+   --profile-ranks 0\
+   --profile-step-end 53\
+   --profile-step-start 50\
+   --qk-layernorm\
+   --recompute-granularity full\
+   --recompute-method uniform\
+   --recompute-num-layers 2\
+   --rerun-mode disabled\
+   --rotary-base 1000000\
+   --seq-length 16384\
+   --spec megatron.core.models.hybrid.hybrid_layer_specs hybrid_stack_spec\
+   --split 100,0,0\
+   --swiglu\
+   --tensorboard-dir /fast/dmartinez/oellm-ldm-work/render/hybrid_speed/o1_ckptoff/e_db/tb\
+   --tokenizer-model /gpfs/projects/ehpc533/tokenizers/tokenizer-256k\
+   --tokenizer-type HuggingFaceTokenizer\
+   --train-iters 15\
+   --untie-embeddings-and-output-weights\
+   --use-distributed-optimizer\
+   --use-flash-attn\
+   --use-megatron-fsdp\
+   --wandb-save-dir /fast/dmartinez/oellm-ldm-work/render/hybrid_speed/o1_ckptoff/e_db/wandb\
+   --weight-decay 0.1

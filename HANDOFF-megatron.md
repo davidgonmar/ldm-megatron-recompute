@@ -242,11 +242,15 @@ gradient together are about 4.2-4.3 GB at 65k tokens per GPU, and no design can 
   They ran with `ITERS=4`, while the production flags carry `--lr-warmup-iters 5`. They were not
   rerun; `ITERS=6` fixes it.
 
-This code exists only as uncommitted changes in our checkout:
-- `/fast/dmartinez/oellm-autoexp/submodules/cute_kernels`, branch `ldm-ustream-unwind`;
-- `/fast/dmartinez/oellm-autoexp/submodules/Megatron-LM`, branch `ldm-cute-recompute`.
+This code is now in `patches/memory-wip/` in this repository, exported from the uncommitted
+working trees in our checkout:
+- `patches/memory-wip/megatron.patch`: Megatron-LM branch `ldm-cute-recompute`, base `6863266d6`;
+- `patches/memory-wip/cute_kernels.patch`: cute_kernels branch `ldm-ustream-unwind`, base
+  `10e0b51`, including the new `cute_ldm/kernels/read.py`.
 
-It differs from `patches/` in this repository.
+Both apply with `git apply` on the same bases as `patches/`, and they supersede `patches/`. This
+is the code state that benchmark job 17768764 ran (17.07 s/step, 73.7 GB peak allocated). The
+working trees themselves are still uncommitted in `/fast/dmartinez/oellm-autoexp/submodules/`.
 
 ### 2.8 Residual growth under MuOwn (2026-10-27)
 
@@ -348,7 +352,9 @@ real BF16 kernels (job 17790205).
 - **Peak memory:** about 9.5 GB above mHC-4 at 2 layers per group (73.7 vs 64.1 GB). About 5 GB of
   that is not accounted for. The allocator traces never ran.
 - **Fit on your GPUs:** never measured on 64 GB H100s with 112 experts.
-- **Unpublished code:** the post-publish memory work (2.7) is uncommitted in our checkout.
+- **Memory work:** the post-publish memory work (2.7) is in `patches/memory-wip/` (bases
+  `6863266d6` and `10e0b51`). It supersedes `patches/` and is the state benchmarked as job
+  17768764. It is not committed to any branch of your repositories.
 - **Limits:** no pipeline parallelism, `depth_memory_sites all` only, FP32 running covariance
   required, no `RECOMPUTE_SKIP_CHUNKS`. Each raises an error.
 - **Residual growth:** the MuOwn question (2.8) is unanswered.
@@ -396,6 +402,26 @@ real BF16 kernels (job 17790205).
 In this repository:
 - `README.md`: the published design, results, numerics and limits.
 - `patches/cute_kernels.patch` (base `10e0b51`) and `patches/megatron.patch` (base `6863266d6`).
+- `patches/memory-wip/cute_kernels.patch` and `patches/memory-wip/megatron.patch`: the same bases,
+  with the memory work of 2.7. They supersede `patches/`.
+- `work/`: a copy of the parts of `/fast/dmartinez/oellm-ldm-work` you need to continue, at the
+  same relative paths, so `/fast/dmartinez/oellm-ldm-work/<path>` below is `work/<path>` here:
+  - `work/scripts/`: every working script and Condor submit file, including `bench.sh` with
+    `MEM_TRACE` and `mem_peak.py`;
+  - `work/flagdiag/`: the 2026-10-29 numerics scripts, `run.sh`, `burst.json`, `stress.json`,
+    `emulate_full.out` and the Condor logs in `condor/`;
+  - `work/growth/`: the residual-growth scripts, `condor/` (submit files and logs) and `runs/`;
+  - `work/render/`: your launcher's rendered speed arms;
+  - `work/pr/`: `make_patches.sh` and the PR description `README.md`.
+
+  The scripts use absolute `/fast/dmartinez/...` paths and our Condor submit format; change both
+  on your side. Not copied:
+  - `logs/`, `bench/`, `traces/` (outputs);
+  - `images/`, `pyuser/`, `cache/`, `home/` and `constraints.txt` (the environment, which
+    `scripts/setup_env.sh` rebuilds);
+  - `cute_kernels_base/`, a copy of your cute_kernels at the base commit;
+  - `growth/snap/`, `growth/render/` (your sources and launcher) and `growth/data/` (tokens);
+  - `flagdiag/cute_kernels_4739513/`, which is your cute_kernels at commit `4739513`.
 - `scripts/setup_env.sh`, `scripts/run_in_env.sh`, `scripts/test.sh`, `scripts/bench.sh`,
   `scripts/production_args.txt`.
 - `tools/trace_summary.py`, `tools/trace_attrib.py`: split a profiled step into kernel families

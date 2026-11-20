@@ -1,0 +1,86 @@
+--activation-func-clamp-value 10.0
+--adam-beta2 0.95
+--disable-bias-linear
+--arch-metrics-interval 50
+--attention-dropout 0.0
+--attention-output-gate
+--bf16
+--no-check-for-nan-in-loss-and-grad
+--no-create-attention-mask-in-dataloader
+--cross-entropy-loss-fusion
+--dataloader-inter-document-masking
+--dataloader-prefetch-factor 4
+--dataloader-type cyclic
+--distributed-timeout-minutes 45
+--engram-ngram-orders 2 3
+--eval-interval 500
+--eval-iters 20
+--exclusive-self-attention
+--exit-interval 4000
+--experimental-attention-variant complex_kda
+--expert-model-parallel-size 4
+--ffn-hidden-size 2048
+--fused-qk-norm-rope
+--fused-residual-rmsnorm
+--fused-short-conv
+--gdn-fused-out-norm
+--global-batch-size 64
+--group-query-attention
+--hidden-dropout 0.0
+--hidden-size 768
+--hybrid-layer-pattern "*ELELELELELE*ELELELELELE"
+--is-hybrid-model
+--kv-channels 128
+--liger-fused-linear-cross-entropy
+--liger-fused-linear-cross-entropy-chunk-size 8192
+--linear-beta-max 2.0
+--linear-drop-qkv-silu
+--linear-num-key-heads 6
+--linear-num-value-heads 6
+--log-interval 10
+--log-throughput
+--log-timers-to-tensorboard
+--lr 0.004
+--lr-decay-iters 4000
+--lr-decay-style WSD
+--lr-wsd-decay-iters 800
+--lr-wsd-decay-style linear
+--manual-gc
+--manual-gc-interval 10
+--max-position-embeddings 8192
+--micro-batch-size 1
+--min-lr 0.0004
+--no-mmap-bin-files
+--moe-aux-loss-coeff 0.0001
+--moe-expert-viability-metrics
+--moe-ffn-hidden-size 512
+--moe-grouped-gemm
+--moe-per-layer-logging
+--moe-permute-fusion
+--moe-router-dtype fp32
+--moe-router-enable-expert-bias
+--moe-router-load-balancing-type aux_loss
+--moe-router-score-function sigmoid
+--moe-router-topk 3
+--moe-shared-expert-intermediate-size 512
+--moe-token-dispatcher-type alltoall
+--muon-qkv-headwise
+--normalization RMSNorm
+--num-attention-heads 6
+--num-experts 144
+--num-query-groups 2
+--num-workers 8
+--optimizer muown_classical
+--overlap-grad-reduce
+--position-embedding-type none
+--qk-layernorm
+--rerun-mode disabled
+--seq-length 8192
+--spec megatron.core.models.hybrid.hybrid_layer_specs hybrid_stack_spec
+--split 998,2,0
+--swiglu
+--train-iters 4000
+--untie-embeddings-and-output-weights
+--use-distributed-optimizer
+--use-flash-attn
+--weight-decay 0.1

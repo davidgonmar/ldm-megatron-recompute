@@ -1,0 +1,17 @@
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (493) bind mounts
+Unable to determine the device handle for GPU1: 0000:E4:00.0: Unknown Error
+Traceback (most recent call last):
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/stress.py", line 114, in <module>
+    main()
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/stress.py", line 55, in main
+    steps, cot = steps_for(b)
+                 ^^^^^^^^^^^^
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/stress.py", line 31, in steps_for
+    steps, cot = numerics.make_steps("nominal", edges, n, g, k, d, seed=0)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/cute_kernels_4739513/cute_ldm/numerics.py", line 41, in make_steps
+    gen = torch.Generator(device=device).manual_seed(seed)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unknown error
+Search for `cudaErrorUnknown' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+Device-side assertions were explicitly omitted for this error check; the error probably arose while initializing the DSA handlers.

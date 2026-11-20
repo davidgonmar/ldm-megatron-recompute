@@ -1,0 +1,13 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/scripts/run_in_env.sh
+arguments       = "cd submodules/Megatron-LM && torchrun --nproc-per-node 1 -m pytest -x -q -p no:cacheprovider tests/unit_tests/models/test_hybrid_depth_memory_segments.py::test_cute_recompute_matches_one_sequence"
+initialdir      = /fast/dmartinez/oellm-ldm-work
+getenv          = False
+request_gpus    = 1
+request_cpus    = 8
+request_memory  = 64GB
+requirements    = (CUDADeviceName == "NVIDIA B200") && (Machine != "i306.internal.cluster.is.localnet") && (Machine != "i307.internal.cluster.is.localnet")
+log             = /fast/dmartinez/oellm-ldm-work/logs/cute_model-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/logs/cute_model-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/logs/cute_model-$(Cluster).err
+queue

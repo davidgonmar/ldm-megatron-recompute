@@ -1,0 +1,13 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/scripts/bench.sh
+arguments       = "$(arm) $(mbs)"
+initialdir      = /fast/dmartinez/oellm-ldm-work
+getenv          = False
+request_gpus    = 8
+request_cpus    = 64
+request_memory  = 600GB
+requirements    = (CUDADeviceName == "NVIDIA H100 80GB HBM3") && (Machine != "i205.internal.cluster.is.localnet") && (Machine != "i207.internal.cluster.is.localnet")
+log             = /fast/dmartinez/oellm-ldm-work/logs/bench-$(arm)-m$(mbs)-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/logs/bench-$(arm)-m$(mbs)-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/logs/bench-$(arm)-m$(mbs)-$(Cluster).err
+queue

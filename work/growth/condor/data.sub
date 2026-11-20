@@ -1,0 +1,13 @@
+universe        = vanilla
+executable      = /usr/bin/apptainer
+arguments       = "exec --cleanenv --bind /fast /fast/dmartinez/oellm-ldm-work/images/pytorch_26.09-py3.sif python3 /fast/dmartinez/oellm-ldm-work/growth/make_megatron_data.py /fast/dmartinez/oellm-ldm-work/growth/data/fwedu_neox_4shards /fast/wangk/data/fineweb-edu/pre-tokenize/train/000_00000.npy /fast/wangk/data/fineweb-edu/pre-tokenize/train/000_00001.npy /fast/wangk/data/fineweb-edu/pre-tokenize/train/000_00002.npy /fast/wangk/data/fineweb-edu/pre-tokenize/train/000_00003.npy"
+initialdir      = /fast/dmartinez/oellm-ldm-work/growth
+getenv          = False
+environment     = "PATH=/usr/local/bin:/usr/bin:/bin"
+request_cpus    = 2
+request_memory  = 32GB
+request_disk    = 4GB
+log             = /fast/dmartinez/oellm-ldm-work/growth/condor/data-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/growth/condor/data-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/growth/condor/data-$(Cluster).err
+queue

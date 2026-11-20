@@ -1,0 +1,14 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/scripts/run_in_env.sh
+arguments       = "python3 /fast/dmartinez/oellm-ldm-work/scripts/ws_mem.py 65536"
+initialdir      = /fast/dmartinez/oellm-ldm-work
+getenv          = False
+request_gpus    = 1
+request_cpus    = 4
+request_memory  = 200GB
+request_disk    = 20GB
+requirements    = (CUDADeviceName == "NVIDIA B200") && (Machine != "i306.internal.cluster.is.localnet") && (Machine != "i307.internal.cluster.is.localnet")
+log             = /fast/dmartinez/oellm-ldm-work/logs/ws_mem-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/logs/ws_mem-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/logs/ws_mem-$(Cluster).err
+queue

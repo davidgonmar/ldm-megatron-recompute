@@ -1,0 +1,13 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/scripts/run_in_env.sh
+arguments       = "cd submodules/Megatron-LM && python3 /fast/dmartinez/oellm-ldm-work/scripts/trace_recompute_calls.py *-*-*- 1"
+initialdir      = /fast/dmartinez/oellm-ldm-work
+getenv          = False
+request_gpus    = 1
+request_cpus    = 8
+request_memory  = 64GB
+requirements    = (CUDADeviceName == "NVIDIA B200") && (Machine != "i306.internal.cluster.is.localnet") && (Machine != "i307.internal.cluster.is.localnet")
+log             = /fast/dmartinez/oellm-ldm-work/logs/cute_trace-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/logs/cute_trace-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/logs/cute_trace-$(Cluster).err
+queue

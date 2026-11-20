@@ -1,0 +1,4 @@
+cute_ldm from /fast/dmartinez/oellm-ldm-work/flagdiag/cute_kernels_4739513/cute_ldm/__init__.py
+CUDA_VISIBLE_DEVICES=
+GPU 0: NVIDIA H100 80GB HBM3 (UUID: GPU-438be6c4-0cdf-b6f8-b025-c142f07508d4)
+Unable to determine the device handle for gpu 0000:C3:00.0: Unknown Error

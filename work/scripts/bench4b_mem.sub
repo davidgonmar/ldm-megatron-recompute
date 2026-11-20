@@ -1,0 +1,15 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/scripts/bench.sh
+arguments       = "$(arm) $(mbs) 4"
+environment     = "MEM_TRACE=1 ITERS=4"
+initialdir      = /fast/dmartinez/oellm-ldm-work
+getenv          = False
+request_gpus    = 4
+request_cpus    = 32
+request_memory  = 400GB
+request_disk    = 100GB
+requirements    = (CUDADeviceName == "NVIDIA B200") && (Machine != "i306.internal.cluster.is.localnet") && (Machine != "i307.internal.cluster.is.localnet")
+log             = /fast/dmartinez/oellm-ldm-work/logs/bench4bmem-$(arm)-m$(mbs)-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/logs/bench4bmem-$(arm)-m$(mbs)-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/logs/bench4bmem-$(arm)-m$(mbs)-$(Cluster).err
+queue

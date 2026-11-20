@@ -1,0 +1,13 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/flagdiag/run.sh
+initialdir      = /fast/dmartinez/oellm-ldm-work/flagdiag
+getenv          = False
+environment     = "PATH=/usr/local/bin:/usr/bin:/bin"
+request_gpus    = 1
+request_cpus    = 8
+request_memory  = 64GB
+requirements    = (CUDADeviceName == "NVIDIA H100 80GB HBM3")
+log             = /fast/dmartinez/oellm-ldm-work/flagdiag/condor/burst-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/flagdiag/condor/burst-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/flagdiag/condor/burst-$(Cluster).err
+queue

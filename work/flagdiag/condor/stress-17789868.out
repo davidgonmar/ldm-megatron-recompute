@@ -1,0 +1,88 @@
+cute_ldm from /fast/dmartinez/oellm-ldm-work/flagdiag/cute_kernels_4739513/cute_ldm/__init__.py
+CUDA_VISIBLE_DEVICES=
+GPU 0: NVIDIA B200 (UUID: GPU-22016692-019c-c50c-211c-44cd86e6050c)
+cuda ok NVIDIA B200
+
+=== B = 1   finite: {'cute': True, 'recompute': True}   forward reads worst 5.1e-03   max |M| (FP64) 3.23
+true FP64 gradient norms: khat 1.44e+03  query 1.2e+03  value 444  scale 691  forgetting 1.39e+03
+| gradient | cute early | cute all | recompute early | recompute all | recompute abs err |
+| khat | 4.6e-03 | 4.4e-03 | 6.8e-03 | 6.5e-03 | 9.37 |
+| query | 6.0e-03 | 5.8e-03 | 1.1e-02 | 9.9e-03 | 11.9 |
+| value | 3.9e-03 | 3.8e-03 | 5.2e-03 | 5.0e-03 | 2.22 |
+| scale | 4.1e-03 | 4.0e-03 | 5.3e-03 | 5.1e-03 | 3.56 |
+| forgetting | 3.4e-03 | 3.4e-03 | 4.9e-03 | 4.9e-03 | 6.87 |
+window start:               4        8       16       32       48       52       56       64       72       80       92
+unwound M rel err:    9.2e-03  7.1e-03  6.1e-03  5.9e-03  5.8e-03  5.8e-03  5.8e-03  5.6e-03  5.5e-03  5.3e-03  5.0e-03
+unwound M abs err:    3.5e-02  3.4e-02  3.3e-02  3.2e-02  3.7e-02  3.5e-02  3.2e-02  3.1e-02  3.8e-02  3.4e-02  2.2e-02
+implied read err:     9.2e-03  7.1e-03  6.1e-03  5.9e-03  5.8e-03  5.8e-03  5.7e-03  5.6e-03  5.5e-03  5.3e-03  5.0e-03
+recomputed read err:  1.7e-02  1.3e-02  1.1e-02  1.0e-02  9.8e-03  9.6e-03  9.4e-03  8.9e-03  8.2e-03  7.4e-03  5.8e-03
+
+=== B = 10   finite: {'cute': True, 'recompute': True}   forward reads worst 5.5e-03   max |M| (FP64) 15.9
+true FP64 gradient norms: khat 3.46e+03  query 2.98e+03  value 444  scale 1.78e+03  forgetting 3.73e+03
+| gradient | cute early | cute all | recompute early | recompute all | recompute abs err |
+| khat | 5.3e-03 | 4.1e-03 | 1.0e-02 | 6.8e-03 | 23.5 |
+| query | 1.3e-02 | 5.8e-03 | 3.1e-02 | 1.2e-02 | 36.7 |
+| value | 3.9e-03 | 3.8e-03 | 5.2e-03 | 5.0e-03 | 2.22 |
+| scale | 4.0e-03 | 3.6e-03 | 5.2e-03 | 4.8e-03 | 8.47 |
+| forgetting | 4.8e-03 | 4.4e-03 | 4.5e-03 | 4.2e-03 | 15.5 |
+window start:               4        8       16       32       48       52       56       64       72       80       92
+unwound M rel err:    1.8e-02  1.4e-02  1.2e-02  1.3e-02  1.4e-02  1.4e-02  6.8e-03  3.9e-03  3.4e-03  4.1e-03  5.0e-03
+unwound M abs err:    1.1e-01  1.1e-01  1.1e-01  1.1e-01  1.1e-01  1.1e-01  1.1e-01  1.0e-01  1.0e-01  1.0e-01  9.8e-02
+implied read err:     1.8e-02  1.4e-02  1.2e-02  1.3e-02  1.4e-02  1.4e-02  6.8e-03  3.9e-03  3.4e-03  4.1e-03  5.0e-03
+recomputed read err:  4.3e-02  3.3e-02  2.8e-02  3.0e-02  3.3e-02  3.3e-02  1.6e-02  8.7e-03  6.7e-03  6.5e-03  5.8e-03
+
+=== B = 30   finite: {'cute': True, 'recompute': True}   forward reads worst 5.5e-03   max |M| (FP64) 47.7
+true FP64 gradient norms: khat 9.6e+03  query 8.29e+03  value 444  scale 4.98e+03  forgetting 1e+04
+| gradient | cute early | cute all | recompute early | recompute all | recompute abs err |
+| khat | 5.9e-03 | 4.0e-03 | 1.3e-02 | 6.9e-03 | 65.8 |
+| query | 3.4e-02 | 5.7e-03 | 8.8e-02 | 1.3e-02 | 105 |
+| value | 3.9e-03 | 3.8e-03 | 5.2e-03 | 5.0e-03 | 2.22 |
+| scale | 3.9e-03 | 3.6e-03 | 5.1e-03 | 4.7e-03 | 23.5 |
+| forgetting | 5.1e-03 | 4.4e-03 | 4.8e-03 | 4.4e-03 | 43.9 |
+window start:               4        8       16       32       48       52       56       64       72       80       92
+unwound M rel err:    4.7e-02  3.6e-02  3.1e-02  3.3e-02  3.7e-02  3.8e-02  6.9e-03  3.7e-03  3.3e-03  4.0e-03  5.0e-03
+unwound M abs err:    3.0e-01  3.0e-01  3.0e-01  3.0e-01  3.0e-01  3.0e-01  3.0e-01  3.2e-01  2.8e-01  3.1e-01  3.2e-01
+implied read err:     4.7e-02  3.6e-02  3.1e-02  3.3e-02  3.7e-02  3.8e-02  6.9e-03  3.8e-03  3.3e-03  4.0e-03  5.0e-03
+recomputed read err:  1.2e-01  9.2e-02  8.0e-02  8.5e-02  9.4e-02  9.6e-02  1.7e-02  8.7e-03  6.6e-03  6.5e-03  5.8e-03
+
+=== B = 100   finite: {'cute': True, 'recompute': True}   forward reads worst 5.5e-03   max |M| (FP64) 159
+true FP64 gradient norms: khat 3.17e+04  query 2.74e+04  value 444  scale 1.64e+04  forgetting 3.24e+04
+| gradient | cute early | cute all | recompute early | recompute all | recompute abs err |
+| khat | 6.1e-03 | 4.0e-03 | 1.4e-02 | 6.9e-03 | 217 |
+| query | 1.1e-01 | 5.6e-03 | 2.9e-01 | 1.3e-02 | 349 |
+| value | 3.9e-03 | 3.8e-03 | 5.2e-03 | 5.0e-03 | 2.22 |
+| scale | 3.8e-03 | 3.6e-03 | 5.0e-03 | 4.7e-03 | 77.3 |
+| forgetting | 5.2e-03 | 4.6e-03 | 4.7e-03 | 4.1e-03 | 134 |
+window start:               4        8       16       32       48       52       56       64       72       80       92
+unwound M rel err:    1.5e-01  1.2e-01  1.0e-01  1.1e-01  1.2e-01  1.2e-01  6.9e-03  3.7e-03  3.3e-03  4.0e-03  5.0e-03
+unwound M abs err:    8.6e-01  8.6e-01  8.7e-01  8.6e-01  8.6e-01  8.6e-01  9.9e-01  8.7e-01  8.7e-01  1.0e+00  1.1e+00
+implied read err:     1.5e-01  1.2e-01  1.0e-01  1.1e-01  1.2e-01  1.2e-01  6.9e-03  3.7e-03  3.3e-03  4.0e-03  4.9e-03
+recomputed read err:  3.9e-01  3.0e-01  2.6e-01  2.8e-01  3.1e-01  3.2e-01  1.8e-02  8.7e-03  6.6e-03  6.5e-03  5.8e-03
+
+=== B = 300   finite: {'cute': True, 'recompute': True}   forward reads worst 5.5e-03   max |M| (FP64) 476
+true FP64 gradient norms: khat 9.5e+04  query 8.21e+04  value 444  scale 4.93e+04  forgetting 9.65e+04
+| gradient | cute early | cute all | recompute early | recompute all | recompute abs err |
+| khat | 6.1e-03 | 4.0e-03 | 1.4e-02 | 6.9e-03 | 651 |
+| query | 3.3e-01 | 5.6e-03 | 8.7e-01 | 1.3e-02 | 1.04e+03 |
+| value | 3.9e-03 | 3.8e-03 | 5.2e-03 | 5.0e-03 | 2.22 |
+| scale | 3.8e-03 | 3.6e-03 | 5.0e-03 | 4.7e-03 | 231 |
+| forgetting | 5.0e-03 | 4.4e-03 | 4.9e-03 | 4.5e-03 | 436 |
+window start:               4        8       16       32       48       52       56       64       72       80       92
+unwound M rel err:    4.5e-01  3.5e-01  3.0e-01  3.2e-01  3.6e-01  3.7e-01  6.9e-03  3.7e-03  3.3e-03  4.0e-03  5.0e-03
+unwound M abs err:    3.0e+00  3.0e+00  3.0e+00  3.0e+00  3.0e+00  3.0e+00  2.9e+00  2.8e+00  2.6e+00  3.0e+00  3.5e+00
+implied read err:     4.5e-01  3.5e-01  3.0e-01  3.3e-01  3.6e-01  3.7e-01  6.9e-03  3.7e-03  3.3e-03  4.0e-03  4.9e-03
+recomputed read err:  1.2e+00  9.1e-01  7.9e-01  8.5e-01  9.4e-01  9.6e-01  1.8e-02  8.7e-03  6.6e-03  6.5e-03  5.8e-03
+
+=== B = 1000   finite: {'cute': True, 'recompute': True}   forward reads worst 5.5e-03   max |M| (FP64) 1.59e+03
+true FP64 gradient norms: khat 3.17e+05  query 2.74e+05  value 444  scale 1.64e+05  forgetting 3.21e+05
+| gradient | cute early | cute all | recompute early | recompute all | recompute abs err |
+| khat | 6.1e-03 | 4.0e-03 | 1.4e-02 | 6.8e-03 | 2.17e+03 |
+| query | 1.1e+00 | 5.6e-03 | 2.9e+00 | 1.3e-02 | 3.48e+03 |
+| value | 3.9e-03 | 3.8e-03 | 5.2e-03 | 5.0e-03 | 2.22 |
+| scale | 3.8e-03 | 3.6e-03 | 5.0e-03 | 4.7e-03 | 772 |
+| forgetting | 6.0e-03 | 5.1e-03 | 5.2e-03 | 4.4e-03 | 1.42e+03 |
+window start:               4        8       16       32       48       52       56       64       72       80       92
+unwound M rel err:    1.5e+00  1.2e+00  1.0e+00  1.1e+00  1.2e+00  1.2e+00  6.9e-03  3.7e-03  3.3e-03  4.0e-03  5.0e-03
+unwound M abs err:    9.1e+00  9.1e+00  9.1e+00  9.1e+00  9.1e+00  9.1e+00  9.1e+00  9.7e+00  1.0e+01  1.1e+01  1.0e+01
+implied read err:     1.5e+00  1.2e+00  1.0e+00  1.1e+00  1.2e+00  1.2e+00  6.9e-03  3.7e-03  3.3e-03  4.0e-03  5.0e-03
+recomputed read err:  3.9e+00  3.0e+00  2.6e+00  2.8e+00  3.1e+00  3.2e+00  1.8e-02  8.7e-03  6.6e-03  6.5e-03  5.8e-03

@@ -1,0 +1,30 @@
+000 (17789858.000.000) 2026-10-29 14:12:25 Job submitted from host: <10.15.2.1:9618?PrivAddr=%3c172.22.0.101:9618%3fsock%3dschedd_3836663_46cb%3e&PrivNet=internal.cluster.is.localnet&addrs=10.15.2.1-9618&alias=sched.cluster.is.localnet&noUDP&sock=schedd_3836663_46cb>
+...
+001 (17789858.000.000) 2026-10-29 14:12:40 Job executing on host: <172.22.8.13:9618?addrs=172.22.8.13-9618&alias=i205.internal.cluster.is.localnet&noUDP&sock=startd_13100_16bf>
+...
+006 (17789858.000.000) 2026-10-29 14:12:49 Image size of job updated: 130936
+	61  -  MemoryUsage of job (MB)
+	61496  -  ResidentSetSize of job (KB)
+...
+006 (17789858.000.000) 2026-10-29 14:13:04 Image size of job updated: 5385876
+	61  -  MemoryUsage of job (MB)
+	61496  -  ResidentSetSize of job (KB)
+...
+005 (17789858.000.000) 2026-10-29 14:13:05 Job terminated.
+	(1) Normal termination (return value 1)
+		Usr 0 00:00:12, Sys 0 00:00:07  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:00:12, Sys 0 00:00:07  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated Assigned
+	   Cpus                 :                 8         8 
+	   Disk (KB)            :        2        2  24828489 
+	   Gpus (Average)       :                 1         1 "GPU-438be6c4"
+	   Memory (MB)          :       61    65536     65536 
+
+	Job terminated of its own accord at 2026-10-29T13:13:04Z with exit-code 1.
+...

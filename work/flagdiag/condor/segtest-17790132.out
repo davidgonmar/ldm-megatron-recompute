@@ -1,0 +1,7 @@
+cute_ldm from /fast/dmartinez/oellm-ldm-work/flagdiag/cute_kernels_4739513/cute_ldm/__init__.py
+CUDA_VISIBLE_DEVICES=
+GPU 0: NVIDIA B200 (UUID: GPU-d6838e23-9979-a30f-f54f-be0813915f8b)
+cuda ok NVIDIA B200
+errors normwise over the edges before the band (< 55); unwound M worst over window starts < 55 (the read it implies is the same within 1 %, see stress.py)
+| B | checkpoints | unwound M | khat | query | value | scale | forgetting |
+| 1 | none | 9.2e-03 | 4.6e-03 | 6.0e-03 | 3.9e-03 | 4.1e-03 | 3.4e-03 |

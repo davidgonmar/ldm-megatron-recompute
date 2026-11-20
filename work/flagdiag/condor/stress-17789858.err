@@ -1,0 +1,21 @@
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (493) bind mounts
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/dist-packages/torch/cuda/__init__.py", line 591, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero.
+Traceback (most recent call last):
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/stress.py", line 114, in <module>
+    main()
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/stress.py", line 55, in main
+    steps, cot = steps_for(b)
+                 ^^^^^^^^^^^^
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/stress.py", line 31, in steps_for
+    steps, cot = numerics.make_steps("nominal", edges, n, g, k, d, seed=0)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/fast/dmartinez/oellm-ldm-work/flagdiag/cute_kernels_4739513/cute_ldm/numerics.py", line 41, in make_steps
+    gen = torch.Generator(device=device).manual_seed(seed)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: unknown error
+Search for `cudaErrorUnknown' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+Device-side assertions were explicitly omitted for this error check; the error probably arose while initializing the DSA handlers.

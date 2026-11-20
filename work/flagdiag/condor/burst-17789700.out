@@ -1,0 +1,83 @@
+cute_ldm from /fast/dmartinez/oellm-ldm-work/flagdiag/cute_kernels_4739513/cute_ldm/__init__.py
+NVIDIA H100 80GB HBM3
+
+## nominal
+
+edges <55
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 2.5e-07 |  |  | 7.9e-07 | 2.5e-07 | 2.7e-07 | 5.3e-07 | 1.1e-06 |  |
+| fp32_torch_sym | 2.2e-07 |  |  | 2.9e-07 | 2.3e-07 | 2.3e-07 | 2.7e-07 | 5.3e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.4e-03 |  |
+| cute | 4.6e-03 |  |  | 4.8e-03 | 8.4e-03 | 4.1e-03 | 4.3e-03 | 6.6e-03 | 9.2e-03 |
+| cute_recompute | 4.6e-03 | 3.3e-02 | 3.3e-02 | 7.1e-03 | 2.0e-02 | 5.4e-03 | 5.5e-03 | 8.6e-03 |  |
+
+edges 55-73
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 3.0e-07 |  |  | 3.8e-07 | 3.0e-07 | 3.4e-07 | 3.5e-07 | 5.7e-07 |  |
+| fp32_torch_sym | 2.3e-07 |  |  | 2.7e-07 | 2.4e-07 | 2.3e-07 | 2.4e-07 | 4.0e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.2e-03 |  |
+| cute | 4.9e-03 |  |  | 4.4e-03 | 5.8e-03 | 3.8e-03 | 4.0e-03 | 4.9e-03 | 5.8e-03 |
+| cute_recompute | 4.9e-03 | 9.4e-03 | 8.7e-03 | 5.9e-03 | 9.4e-03 | 4.9e-03 | 5.1e-03 | 5.6e-03 |  |
+
+edges >73
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 4.0e-07 |  |  | 5.8e-07 | 4.0e-07 | 5.7e-07 | 6.0e-07 | 7.6e-07 |  |
+| fp32_torch_sym | 2.4e-07 |  |  | 2.6e-07 | 2.4e-07 | 2.1e-07 | 2.3e-07 | 3.6e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.2e-03 |  |
+| cute | 5.1e-03 |  |  | 3.8e-03 | 5.4e-03 | 3.2e-03 | 3.4e-03 | 3.7e-03 | 5.4e-03 |
+| cute_recompute | 5.1e-03 | 7.9e-03 | 6.7e-03 | 4.9e-03 | 7.8e-03 | 4.0e-03 | 4.2e-03 | 4.3e-03 |  |
+M rms (last) 0.34517053129001757 read rms (last) 0.35872760589478675
+
+## burst_650
+
+edges <55
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 2.5e-07 |  |  | 5.1e-06 | 2.5e-07 | 2.7e-07 | 3.3e-06 | 4.0e-06 |  |
+| fp32_torch_sym | 2.2e-07 |  |  | 5.2e-07 | 2.3e-07 | 2.3e-07 | 4.9e-07 | 7.7e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.6e-03 |  |
+| cute | 4.6e-03 |  |  | 9.0e-03 | 3.6e-02 | 4.1e-03 | 4.1e-03 | 4.7e-03 | 4.0e-02 |
+| cute_recompute | 4.6e-03 | 2.0e-01 | 2.0e-01 | 2.3e-02 | 1.2e-01 | 5.4e-03 | 5.2e-03 | 5.0e-03 |  |
+
+edges 55-73
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 3.1e-07 |  |  | 5.0e-07 | 3.2e-07 | 3.4e-07 | 5.0e-07 | 6.2e-07 |  |
+| fp32_torch_sym | 2.0e-07 |  |  | 3.4e-07 | 2.1e-07 | 2.3e-07 | 3.3e-07 | 5.9e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.2e-03 |  |
+| cute | 3.4e-03 |  |  | 4.3e-03 | 1.2e-02 | 3.8e-03 | 4.3e-03 | 5.8e-03 | 1.2e-02 |
+| cute_recompute | 3.4e-03 | 3.1e-02 | 3.1e-02 | 8.0e-03 | 3.1e-02 | 4.9e-03 | 5.1e-03 | 5.9e-03 |  |
+
+edges >73
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 3.0e-07 |  |  | 6.1e-07 | 3.0e-07 | 5.7e-07 | 6.1e-07 | 1.2e-06 |  |
+| fp32_torch_sym | 2.2e-07 |  |  | 3.1e-07 | 2.3e-07 | 2.1e-07 | 3.1e-07 | 4.5e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.6e-03 |  |
+| cute | 5.3e-03 |  |  | 5.2e-03 | 5.3e-03 | 3.2e-03 | 5.1e-03 | 6.7e-03 | 5.1e-03 |
+| cute_recompute | 5.3e-03 | 6.5e-03 | 6.0e-03 | 6.6e-03 | 6.4e-03 | 4.0e-03 | 5.3e-03 | 6.7e-03 |  |
+M rms (last) 3.1816161063610013 read rms (last) 3.3154183258465793
+
+## burst_950
+
+edges <55
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 3.4e-07 |  |  | 2.0e-06 | 3.4e-07 | 2.7e-07 | 1.8e-06 | 1.7e-06 |  |
+| fp32_torch_sym | 3.1e-07 |  |  | 4.4e-07 | 3.1e-07 | 2.3e-07 | 4.3e-07 | 6.3e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.4e-03 |  |
+| cute | 6.5e-03 |  |  | 6.8e-03 | 1.7e-02 | 4.1e-03 | 5.2e-03 | 4.3e-03 | 1.6e-02 |
+| cute_recompute | 6.5e-03 | 3.3e-01 | 3.3e-01 | 1.4e-02 | 4.6e-02 | 5.4e-03 | 6.1e-03 | 5.2e-03 |  |
+
+edges 55-73
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 3.6e-07 |  |  | 5.0e-07 | 3.7e-07 | 3.4e-07 | 5.0e-07 | 4.7e-07 |  |
+| fp32_torch_sym | 3.2e-07 |  |  | 3.4e-07 | 3.2e-07 | 2.3e-07 | 3.3e-07 | 4.7e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.2e-03 |  |
+| cute | 6.7e-03 |  |  | 4.5e-03 | 1.9e-02 | 3.8e-03 | 4.5e-03 | 6.3e-03 | 1.9e-02 |
+| cute_recompute | 6.7e-03 | 5.2e-02 | 5.1e-02 | 8.2e-03 | 5.2e-02 | 4.9e-03 | 5.2e-03 | 4.9e-03 |  |
+
+edges >73
+| impl | read | recomputed_read | recomputed_vs_forward | khat | query | value | scale | forgetting | unwound_m |
+| fp32_torch | 3.0e-07 |  |  | 6.2e-07 | 3.1e-07 | 5.7e-07 | 6.1e-07 | 8.7e-07 |  |
+| fp32_torch_sym | 2.2e-07 |  |  | 3.1e-07 | 2.3e-07 | 2.1e-07 | 3.0e-07 | 3.3e-07 |  |
+| bf16_floor | 1.7e-03 |  |  | 1.7e-03 | 1.7e-03 | 1.7e-03 | 1.7e-03 | 2.0e-03 |  |
+| cute | 5.4e-03 |  |  | 5.4e-03 | 5.4e-03 | 3.2e-03 | 5.4e-03 | 6.9e-03 | 5.2e-03 |
+| cute_recompute | 5.4e-03 | 6.5e-03 | 6.0e-03 | 6.6e-03 | 6.5e-03 | 4.0e-03 | 5.4e-03 | 6.9e-03 |  |
+M rms (last) 4.552539624625913 read rms (last) 4.737999997305251

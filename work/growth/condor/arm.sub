@@ -1,0 +1,14 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/growth/run_arm.sh
+arguments       = "$(arm)"
+initialdir      = /fast/dmartinez/oellm-ldm-work/growth
+getenv          = False
+request_gpus    = 8
+request_cpus    = 64
+request_memory  = 600GB
+request_disk    = 100GB
+requirements    = (CUDADeviceName == "NVIDIA B200") && (Machine != "i306.internal.cluster.is.localnet") && (Machine != "i307.internal.cluster.is.localnet")
+log             = /fast/dmartinez/oellm-ldm-work/growth/condor/arm-$(arm)-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/growth/condor/arm-$(arm)-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/growth/condor/arm-$(arm)-$(Cluster).err
+queue

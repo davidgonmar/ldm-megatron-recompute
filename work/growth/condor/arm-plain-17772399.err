@@ -1,0 +1,357 @@
+INFO:    underlay of /usr/bin/nvidia-smi required more than 50 (493) bind mounts
+W1027 14:58:30.209000 795414 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:58:30.213000 795414 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:58:30.213000 795414 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:58:30.221000 795414 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:58:30.222000 795414 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:58:30.222000 795414 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:58:30.230000 795414 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:58:30.230000 795414 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:58:30.230000 795414 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:58:30.234000 795414 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:58:30.234000 795414 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:58:30.234000 795414 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+/usr/local/lib/python3.12/dist-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/inference/contexts/kv_block_allocator.py:426: SyntaxWarning: invalid escape sequence '\-'
+  """Evict LRU cached blocks to free up space in the pool.
+W1027 14:59:03.710000 795538 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.714000 795538 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.714000 795538 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:03.714000 795538 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.714000 795538 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.715000 795538 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:03.715000 795538 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.715000 795538 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.715000 795538 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:03.716000 795538 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.716000 795538 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.716000 795538 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:03.752000 795541 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.752000 795541 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.752000 795541 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:03.753000 795541 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.753000 795541 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.753000 795541 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:03.754000 795541 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.754000 795541 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.754000 795541 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:03.755000 795541 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:03.755000 795541 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:03.755000 795541 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.015000 795534 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.016000 795534 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.016000 795534 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.017000 795534 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.017000 795534 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.017000 795534 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.018000 795534 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.018000 795534 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.018000 795534 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.019000 795534 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.019000 795534 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.019000 795534 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.088000 795536 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.089000 795536 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.089000 795536 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.090000 795536 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.090000 795536 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.090000 795536 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.091000 795536 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.091000 795536 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.091000 795536 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.091000 795536 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.092000 795536 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.092000 795536 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+/usr/local/lib/python3.12/dist-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+W1027 14:59:04.192000 795537 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.193000 795537 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.193000 795537 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.194000 795537 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.194000 795537 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.194000 795537 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.195000 795537 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.195000 795537 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.195000 795537 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.195000 795537 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.195000 795537 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.195000 795537 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.259000 795535 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.259000 795535 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.259000 795535 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.260000 795535 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.260000 795535 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.260000 795535 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.261000 795535 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.261000 795535 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.261000 795535 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.262000 795535 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.262000 795535 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.262000 795535 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.293000 795540 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.294000 795540 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.294000 795540 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.295000 795540 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.295000 795540 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.295000 795540 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.296000 795540 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.296000 795540 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.296000 795540 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.296000 795540 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.296000 795540 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.296000 795540 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.338000 795539 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.339000 795539 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.339000 795539 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.339000 795539 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.340000 795539 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.340000 795539 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.340000 795539 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.340000 795539 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.341000 795539 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+W1027 14:59:04.341000 795539 torch/_library/opaque_object.py:381] is_opaque_value_type is deprecated, use is_opaque_constant_type instead
+W1027 14:59:04.341000 795539 torch/_library/opaque_object.py:288] register_opaque_type is deprecated, use register_custom_class instead
+W1027 14:59:04.341000 795539 torch/_library/opaque_object.py:211] typ='value' is deprecated, use typ='constant' instead
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+/opt/pytorch/ao/torchao/quantization/quant_api.py:1542: SyntaxWarning: invalid escape sequence '\.'
+  """Configuration class for applying different quantization configs to modules or parameters based on their fully qualified names (FQNs).
+W1027 14:59:31.988000 795534 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:31.988000 795539 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:31.988000 795536 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:31.988000 795540 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:31.988000 795541 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:31.989000 795537 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:31.990000 795538 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:31.990000 795535 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795538 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795540 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795535 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795534 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795539 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795537 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795541 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W1027 14:59:32.081000 795536 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+/usr/local/lib/python3.12/dist-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+/usr/local/lib/python3.12/dist-packages/modelopt/torch/__init__.py:55: UserWarning: transformers 5.20.2 is not tested with current version of modelopt and may cause issues. Please install recommended version with `pip install -U nvidia-modelopt[hf]` if working with HF models.
+  _warnings.warn(
+/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/utils/common_utils.py:454: UserWarning: Overriding default arguments for tokenizer_type:GPT2BPETokenizer with tokenizer_type:NullTokenizer
+  warnings.warn(message)
+/usr/local/lib/python3.12/dist-packages/torch/distributed/c10d_logger.py:83: FutureWarning: `torch.distributed.all_gather_into_tensor` is deprecated. Please use `torch.distributed.all_gather_single` instead.
+  return func(*args, **kwargs)
+/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/models/mimo/config/base_configs.py:12: UserWarning: MimoModelConfig is experimental and still under active development. The API may change without notice in future releases.
+  class MimoModelConfig:
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank3]:     pretrain(
+[rank3]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank3]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank3]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank3]:     optimizer = get_megatron_optimizer(
+[rank3]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank3]:     _get_megatron_emerging_optimizer(
+[rank3]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank3]:     raise ImportError(
+[rank3]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank0]:     pretrain(
+[rank0]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank0]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank0]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank0]:     optimizer = get_megatron_optimizer(
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank0]:     _get_megatron_emerging_optimizer(
+[rank0]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank0]:     raise ImportError(
+[rank0]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank1]:     pretrain(
+[rank1]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank1]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank1]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank1]:     optimizer = get_megatron_optimizer(
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank1]:     _get_megatron_emerging_optimizer(
+[rank1]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank1]:     raise ImportError(
+[rank1]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+[rank6]: Traceback (most recent call last):
+[rank6]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank6]:     pretrain(
+[rank6]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank6]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank6]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank6]:     optimizer = get_megatron_optimizer(
+[rank6]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank6]:     _get_megatron_emerging_optimizer(
+[rank6]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank6]:     raise ImportError(
+[rank6]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank7]:     pretrain(
+[rank7]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank7]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank7]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank7]:     optimizer = get_megatron_optimizer(
+[rank7]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank7]:     _get_megatron_emerging_optimizer(
+[rank7]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank7]:     raise ImportError(
+[rank7]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank2]:     pretrain(
+[rank2]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank2]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank2]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank2]:     optimizer = get_megatron_optimizer(
+[rank2]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank2]:     _get_megatron_emerging_optimizer(
+[rank2]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank2]:     raise ImportError(
+[rank2]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+[rank5]: Traceback (most recent call last):
+[rank5]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank5]:     pretrain(
+[rank5]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank5]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank5]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank5]:     optimizer = get_megatron_optimizer(
+[rank5]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank5]:     _get_megatron_emerging_optimizer(
+[rank5]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank5]:     raise ImportError(
+[rank5]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/./submodules/Megatron-LM/pretrain_hybrid.py", line 625, in <module>
+[rank4]:     pretrain(
+[rank4]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 1593, in pretrain
+[rank4]:     model, optimizer, opt_param_scheduler = setup_model_and_optimizer(
+[rank4]:                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/training/training.py", line 2699, in setup_model_and_optimizer
+[rank4]:     optimizer = get_megatron_optimizer(
+[rank4]:                 ^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1422, in get_megatron_optimizer
+[rank4]:     _get_megatron_emerging_optimizer(
+[rank4]:   File "/fast/dmartinez/oellm-ldm-work/growth/snap/submodules/Megatron-LM/megatron/core/optimizer/__init__.py", line 1103, in _get_megatron_emerging_optimizer
+[rank4]:     raise ImportError(
+[rank4]: ImportError: emerging-optimizers package is required for optimizer='muown_classical'. Install it with: pip install emerging-optimizers
+W1027 15:00:35.870000 794394 torch/distributed/elastic/multiprocessing/api.py:1028] Sending process 795534 closing signal SIGTERM
+W1027 15:00:35.872000 794394 torch/distributed/elastic/multiprocessing/api.py:1028] Sending process 795535 closing signal SIGTERM
+W1027 15:00:35.872000 794394 torch/distributed/elastic/multiprocessing/api.py:1028] Sending process 795536 closing signal SIGTERM
+W1027 15:00:35.872000 794394 torch/distributed/elastic/multiprocessing/api.py:1028] Sending process 795538 closing signal SIGTERM
+W1027 15:00:35.872000 794394 torch/distributed/elastic/multiprocessing/api.py:1028] Sending process 795539 closing signal SIGTERM
+W1027 15:00:35.872000 794394 torch/distributed/elastic/multiprocessing/api.py:1028] Sending process 795540 closing signal SIGTERM
+W1027 15:00:35.872000 794394 torch/distributed/elastic/multiprocessing/api.py:1028] Sending process 795541 closing signal SIGTERM
+E1027 15:00:37.892000 794394 torch/distributed/elastic/multiprocessing/api.py:1002] failed (exitcode: 1) local_rank: 3 (pid: 795537) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 380, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 1138, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 1129, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 197, in __call__
+    return launch_agent(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 386, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+./submodules/Megatron-LM/pretrain_hybrid.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-10-27_15:00:37
+  host      : i403.internal.cluster.is.localnet
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 795534) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[2]:
+  time      : 2026-10-27_15:00:37
+  host      : i403.internal.cluster.is.localnet
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 795535) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[3]:
+  time      : 2026-10-27_15:00:37
+  host      : i403.internal.cluster.is.localnet
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 795536) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[4]:
+  time      : 2026-10-27_15:00:37
+  host      : i403.internal.cluster.is.localnet
+  rank      : 4 (local_rank: 4)
+  exitcode  : 1 (pid: 795538) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[5]:
+  time      : 2026-10-27_15:00:37
+  host      : i403.internal.cluster.is.localnet
+  rank      : 5 (local_rank: 5)
+  exitcode  : 1 (pid: 795539) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[6]:
+  time      : 2026-10-27_15:00:37
+  host      : i403.internal.cluster.is.localnet
+  rank      : 6 (local_rank: 6)
+  exitcode  : 1 (pid: 795540) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[7]:
+  time      : 2026-10-27_15:00:37
+  host      : i403.internal.cluster.is.localnet
+  rank      : 7 (local_rank: 7)
+  exitcode  : 1 (pid: 795541) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-10-27_15:00:35
+  host      : i403.internal.cluster.is.localnet
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 795537) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

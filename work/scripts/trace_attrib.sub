@@ -1,0 +1,12 @@
+universe        = vanilla
+executable      = /usr/bin/python3
+arguments       = "-I /fast/dmartinez/oellm-ldm-work/scripts/trace_attrib.py $(trace)"
+initialdir      = /fast/dmartinez/oellm-ldm-work
+getenv          = False
+request_cpus    = 4
+request_memory  = 120GB
+request_disk    = 5GB
+log             = /fast/dmartinez/oellm-ldm-work/logs/attrib-$(tag)-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/logs/attrib-$(tag)-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/logs/attrib-$(tag)-$(Cluster).err
+queue

@@ -1,0 +1,11 @@
+universe        = vanilla
+executable      = /fast/dmartinez/oellm-ldm-work/scripts/setup_env.sh
+initialdir      = /fast/dmartinez/oellm-ldm-work
+getenv          = False
+request_cpus    = 8
+request_memory  = 32GB
+request_disk    = 100GB
+log             = /fast/dmartinez/oellm-ldm-work/logs/setup_env-$(Cluster).log
+output          = /fast/dmartinez/oellm-ldm-work/logs/setup_env-$(Cluster).out
+error           = /fast/dmartinez/oellm-ldm-work/logs/setup_env-$(Cluster).err
+queue
