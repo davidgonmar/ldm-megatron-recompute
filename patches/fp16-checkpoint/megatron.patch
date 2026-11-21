@@ -1,0 +1,169 @@
+diff --git a/megatron/core/transformer/depth_memory.py b/megatron/core/transformer/depth_memory.py
+index 13724b1..ae242a1 100644
+--- a/megatron/core/transformer/depth_memory.py
++++ b/megatron/core/transformer/depth_memory.py
+@@ -333,6 +333,13 @@ class DepthMemoryMixer(nn.Module):
+         _, gate = self.next_query.net(x)
+         arch_metrics.record_mean("ldm/write_weight", layer, n, weight.float())
+         arch_metrics.record_mean("ldm/read_gate", layer, n, gate.float())
++        workspace = self._workspace[0] if self._workspace else None
++        if self.edge == 1 and getattr(workspace, "grad_scaling", False):
++            # FP16 storage under BF16 training: the last backward's gradient scale and the
++            # non-finite input gradients the workspace has zeroed so far (once, on the first site)
++            stats = workspace.numerics_stats()
++            arch_metrics.record_mean("ldm/grad_scale_log2", layer, n, stats["grad_scale"].log2())
++            arch_metrics.record_mean("ldm/grad_nonfinite", layer, n, stats["grad_nonfinite"].float())
+ 
+     def write(self, streams, sublayer_out, h_post=None, h_res=None, lerp=None) -> torch.Tensor:
+         if self.edge is None:
+diff --git a/megatron/core/transformer/depth_memory_state.py b/megatron/core/transformer/depth_memory_state.py
+index f166f54..fc8c4a1 100644
+--- a/megatron/core/transformer/depth_memory_state.py
++++ b/megatron/core/transformer/depth_memory_state.py
+@@ -521,15 +521,24 @@ def make_workspace(config, total_edges: int):
+             span=config.depth_memory_window,
+             running_covariance_dtype=config.depth_memory_covariance_dtype,
+         )
+-        if getattr(config, "fp16", False):
+-            # FP16 training: the kernels' 16-bit tapes and state (M, residuals, reads, DY / DV)
+-            # in FP16, the stream's type (cute_kernels with storage_dtype)
+-            settings["storage_dtype"] = "float16"
++        fp16 = getattr(config, "fp16", False)
++        # the kernels' 16-bit tapes and state (M, residuals, reads, DY / DV): the training type's
++        # unless depth_memory_storage_dtype says otherwise
++        storage = getattr(config, "depth_memory_storage_dtype", None) or (
++            "float16" if fp16 else "bfloat16")
++        settings["storage_dtype"] = storage
++        if storage == "float16" and not fp16:
++            # FP16 tapes without FP16 training's loss scale: the workspace scales its backward
++            settings["grad_scaling"] = True
+         if getattr(config, "depth_memory_unwind", False):
+             # full recompute: the per-edge tapes travel in the stream as records, the recomputed
+-            # layers read from the running state, nothing of the state is checkpointed; the
+-            # HybridStack sets the recompute groups (CuteRecomputeWorkspace.layout)
+-            return CuteRecomputeWorkspace(**settings)
++            # layers read from the running state, M copied every checkpoint interval (if any);
++            # the HybridStack sets the recompute groups (CuteRecomputeWorkspace.layout)
++            return CuteRecomputeWorkspace(
++                **settings,
++                checkpoint_interval=getattr(config, "depth_memory_checkpoint_interval", 0),
++                checkpoint_offload=getattr(config, "depth_memory_checkpoint_offload", True),
++                checkpoint_prefetch=getattr(config, "depth_memory_checkpoint_prefetch", False))
+         return CuteDepthMemoryWorkspace(**settings)
+     if getattr(config, "depth_memory_unwind", False):
+         return UnwindingDepthMemoryWorkspace(total_edges, groups, key_dim, value_dim,
+diff --git a/megatron/core/transformer/transformer_config.py b/megatron/core/transformer/transformer_config.py
+index 9f7ef97..5e2fc4e 100644
+--- a/megatron/core/transformer/transformer_config.py
++++ b/megatron/core/transformer/transformer_config.py
+@@ -2563,6 +2563,30 @@ class TransformerConfig(ModelParallelConfig):
+     """LDM "cute": dtype of the running covariance P ("float32" or "bfloat16"; the paper's BF16
+     default can drift indefinite in deep stacks)."""
+ 
++    depth_memory_storage_dtype: Optional[str] = None
++    """LDM "cute": the 16-bit type of M, its gradient and the kernels' tapes ("bfloat16" or
++    "float16"); None: the training type's (FP16 under ``fp16``, else BF16). "float16" under BF16
++    training gives the M the backward unwinds by subtraction three more mantissa bits (~8x less
++    unwinding error); the workspace then scales its backward's gradients into FP16's range
++    itself (cute_kernels ``grad_scaling``), since there is no loss scale."""
++
++    depth_memory_checkpoint_interval: int = 0
++    """LDM "cute" with ``depth_memory_unwind``: every this many edges (a multiple of
++    ``depth_memory_window``) the forward copies M and the backward restores it, so the unwinding
++    by subtraction never runs across more than one interval -- a burst of large writes deep in the
++    stack no longer degrades every state before it. 0: no checkpoints. Each holds
++    tokens x hidden_size x depth_memory_key_dim x 2 bytes (2 GiB at 64k tokens per GPU, hidden
++    2048, K 8)."""
++
++    depth_memory_checkpoint_offload: bool = True
++    """Keep the ``depth_memory_checkpoint_interval`` copies of M in pinned host memory (copied on
++    a side stream) instead of on the GPU."""
++
++    depth_memory_checkpoint_prefetch: bool = False
++    """With offloaded checkpoints: copy the next checkpoint the backward needs into a GPU staging
++    buffer (one checkpoint's size) an interval ahead, so the restore is a device copy instead of
++    a host-to-device copy the backward waits for."""
++
+     # ---- Looped (weight-tied) depth ----
+     # A prelude/loop/coda stack: the middle block is built once and applied
+     # ``loop_iterations`` times, so effective depth exceeds parameter depth. The
+@@ -2748,6 +2772,18 @@ class TransformerConfig(ModelParallelConfig):
+                 raise ValueError("depth_memory_segments: recompute_method must be uniform")
+             if not 0 < self.depth_memory_lambda_init < 1:
+                 raise ValueError("depth_memory_lambda_init must be in (0, 1)")
++            if self.depth_memory_storage_dtype not in (None, "bfloat16", "float16"):
++                raise ValueError("depth_memory_storage_dtype must be None, bfloat16 or float16")
++            if self.depth_memory_storage_dtype is not None and self.depth_memory_impl != "cute":
++                raise ValueError("depth_memory_storage_dtype needs depth_memory_impl cute")
++            if self.depth_memory_checkpoint_interval:
++                if not (self.depth_memory_impl == "cute" and self.depth_memory_unwind):
++                    raise ValueError("depth_memory_checkpoint_interval needs depth_memory_impl "
++                                     "cute and depth_memory_unwind")
++                if (self.depth_memory_checkpoint_interval < 0
++                        or self.depth_memory_checkpoint_interval % self.depth_memory_window):
++                    raise ValueError("depth_memory_checkpoint_interval must be a positive multiple "
++                                     "of depth_memory_window")
+         if self.mhc_routed_topk:
+             if not self.mhc:
+                 raise ValueError("mhc_routed_topk requires mhc=True")
+diff --git a/tests/unit_tests/models/test_hybrid_depth_memory_segments.py b/tests/unit_tests/models/test_hybrid_depth_memory_segments.py
+index 2819f86..c827ce7 100644
+--- a/tests/unit_tests/models/test_hybrid_depth_memory_segments.py
++++ b/tests/unit_tests/models/test_hybrid_depth_memory_segments.py
+@@ -133,3 +133,56 @@ def test_cute_recompute_matches_one_sequence(pattern, chunk):
+                 torch.testing.assert_close(grads[k], oracle_grads[k], **tol, msg=k)
+     finally:
+         Utils.destroy_model_parallel()
++
++
++@pytest.mark.parametrize("chunk", [1, 2])
++@pytest.mark.parametrize("storage,interval,prefetch", [
++    ("float16", 0, False), ("float16", 4, False), ("float16", 4, True), ("bfloat16", 4, False)])
++def test_cute_recompute_fp16_checkpoints_match_oracle(storage, interval, prefetch, chunk):
++    """depth_memory_unwind with the CuTe kernels, FP16 storage (the workspace scales its own
++    backward: no FP16 training) and M checkpoints every ``interval`` edges: within the CuTe
++    tolerance of the torch oracle; two micro-batches in a row (the second scales from the
++    first's cotangents)."""
++    pytest.importorskip("cute_ldm.workspace")
++    if torch.cuda.get_device_capability()[0] < 9:
++        pytest.skip("cute_ldm needs Hopper / Blackwell")
++    Utils.initialize_model_parallel(1, 1)
++    try:
++        pattern = "*-*-*-*-"
++        ids = [torch.randint(0, VOCAB, (B, S), device="cuda") for _ in range(2)]
++        oracle = _model(pattern, "torch")
++        model = _model(pattern, "cute", depth_memory_unwind=True, recompute_granularity="full",
++                       recompute_method="uniform", recompute_num_layers=chunk,
++                       depth_memory_storage_dtype=storage,
++                       depth_memory_checkpoint_interval=interval,
++                       depth_memory_checkpoint_prefetch=prefetch)
++        ws = model.decoder.ldm_workspace
++        assert ws.checkpoint_prefetch == prefetch
++        assert ws.storage == getattr(torch, storage)
++        assert ws.grad_scaling == (storage == "float16")
++        edges = len(pattern) + 1
++        assert ws.checkpoints == (list(range(interval, edges, interval)) if interval else [])
++        tol = dict(rtol=3e-2, atol=3e-3)
++        for batch in ids:
++            oracle_out, oracle_grads = _fwd_bwd(oracle, batch)
++            out, grads = _fwd_bwd(model, batch)
++            assert set(grads) == set(oracle_grads)
++            torch.testing.assert_close(out, oracle_out, **tol)
++            for k in oracle_grads:
++                torch.testing.assert_close(grads[k], oracle_grads[k], **tol, msg=k)
++        assert int(ws.grad_nonfinite) == 0
++    finally:
++        Utils.destroy_model_parallel()
++
++
++def test_depth_memory_fp16_checkpoint_config():
++    base = dict(num_layers=4, hidden_size=64, num_attention_heads=4, is_hybrid_model=True,
++                depth_memory=True, depth_memory_groups=4)
++    with pytest.raises(ValueError, match="needs depth_memory_impl cute"):
++        TransformerConfig(**base, depth_memory_impl="torch", depth_memory_storage_dtype="float16")
++    with pytest.raises(ValueError, match="depth_memory_checkpoint_interval needs"):
++        TransformerConfig(**base, depth_memory_impl="cute", depth_memory_checkpoint_interval=4)
++    with pytest.raises(ValueError, match="multiple of depth_memory_window"):
++        TransformerConfig(**base, depth_memory_impl="cute", depth_memory_unwind=True,
++                          recompute_granularity="full", recompute_method="uniform",
++                          recompute_num_layers=2, depth_memory_checkpoint_interval=6)

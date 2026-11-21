@@ -1,0 +1,13 @@
+universe        = vanilla
+executable      = /fast/pnazari/ldm-work/scripts/run_in_env.sh
+arguments       = "bash /fast/pnazari/ldm-work/scripts/cute_tests.sh"
+initialdir      = /fast/pnazari/ldm-work
+getenv          = False
+request_gpus    = 1
+request_cpus    = 8
+request_memory  = 64GB
+requirements    = (TARGET.CUDADeviceName == "NVIDIA H100 80GB HBM3") && !regexp("i101|i104|i203|i205|i207", Machine)
+log             = /fast/pnazari/ldm-work/logs/ldm_fp16-$(Cluster).log
+output          = /fast/pnazari/ldm-work/logs/ldm_fp16-$(Cluster).out
+error           = /fast/pnazari/ldm-work/logs/ldm_fp16-$(Cluster).err
+queue
